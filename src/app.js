@@ -1,9 +1,19 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
+const User = require("./models/user");
 
-app.use((req, res) => {
-  res.send("hi from the backend with nodemon");
+app.post("/signup", async (req, res) => {
+  const userObj = {
+    firstName: "mani",
+    lastName: "saluru",
+    email: "mani@gmail.com",
+    password: "mani123",
+  };
+
+  const user = new User(userObj); //creating instance with user model
+  await user.save();
+  res.send("user added succesfully");
 });
 
 connectDB()
