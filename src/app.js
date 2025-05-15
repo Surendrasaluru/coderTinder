@@ -16,8 +16,7 @@ app.post("/signup", async (req, res) => {
   console.log(req.body);
 });
 
-//FEED API
-
+//user API
 app.get("/user", async (req, res) => {
   const userEmail = req.body.email;
   try {
@@ -33,12 +32,24 @@ app.get("/user", async (req, res) => {
   }
 });
 
+//get feed api
 app.get("/feed", async (req, res) => {
   try {
     const users = await User.find(); //find with emptyfilter returns all
     res.send(users);
   } catch (err) {
     res.status(400).send("error in getting feed");
+  }
+});
+
+//delete user api
+app.delete("/user", async (req, res) => {
+  const userId = req.body._id;
+  try {
+    const user = await User.findByIdAndDelete({ _id: userId });
+    res.send("user deleted succesfully!");
+  } catch (err) {
+    res.status(400).send("error in deleting user");
   }
 });
 
