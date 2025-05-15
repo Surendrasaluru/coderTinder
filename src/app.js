@@ -53,6 +53,16 @@ app.delete("/user", async (req, res) => {
   }
 });
 
+app.patch("/user", async (req, res) => {
+  const userId = req.body._id;
+  const data = req.body;
+  try {
+    await User.findByIdAndUpdate({ _id: userId }, data);
+    res.send("user updated succesfully!");
+  } catch (err) {
+    res.status(400).send("error in updatingg user");
+  }
+});
 connectDB()
   .then(() => {
     console.log("database succesfully connected");
