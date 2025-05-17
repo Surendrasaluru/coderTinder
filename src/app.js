@@ -11,9 +11,10 @@ app.post("/signup", async (req, res) => {
     res.send("user added succesfully");
   } catch (err) {
     res.status(400).send("error occured while saving user");
+    console.log(err.message);
   }
 
-  console.log(req.body);
+  //console.log(req.body);
 });
 
 //user API
@@ -57,10 +58,16 @@ app.patch("/user", async (req, res) => {
   const userId = req.body._id;
   const data = req.body;
   try {
-    await User.findByIdAndUpdate({ _id: userId }, data);
+    await User.findByIdAndUpdate(
+      { _id: userId },
+
+      data,
+      { runValidators: true }
+    );
     res.send("user updated succesfully!");
   } catch (err) {
-    res.status(400).send("error in updatingg user");
+    res.status(400).send("error in updatingg user due to " + err.message);
+    //console.log(err.message);
   }
 });
 connectDB()
