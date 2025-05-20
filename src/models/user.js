@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = mongoose.Schema(
   {
@@ -19,6 +20,11 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       unique: true,
       trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("invalid Email : " + value);
+        }
+      },
     },
     password: {
       type: String,
@@ -27,6 +33,7 @@ const userSchema = mongoose.Schema(
     },
     gender: {
       type: String,
+      lowercase: true,
       validate(value) {
         if (!["male", "female", "other"].includes(value)) {
           throw new Error("Gender Data is not valid");
@@ -39,6 +46,11 @@ const userSchema = mongoose.Schema(
     },
     photoURL: {
       type: String,
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("invalid URL: " + value);
+        }
+      },
       default:
         "https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=360",
     },
@@ -49,6 +61,7 @@ const userSchema = mongoose.Schema(
     },
     skills: {
       type: [String],
+      default: ["Javascript", "React", "Java", "AWS"],
     },
   },
   { timestamps: true }

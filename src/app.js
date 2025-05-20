@@ -54,10 +54,25 @@ app.delete("/user", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
-  const userId = req.body._id;
+app.patch("/user/:_id", async (req, res) => {
+  const userId = req.params?._id; //coming from url (_id ni userid ani pilicham)
   const data = req.body;
+
   try {
+    const ALLOWED_UPDATES = ["age", "gender", "photoURL", "about", "skills"];
+
+    const isAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+    //console.log(isAllowed);
+
+    if (!isAllowed) {
+      throw new Error("Update not allowed");
+    }
+
+    if (data.skills.length > 8) {
+      throw new Error("Skills must be less than 8");
+    }
     await User.findByIdAndUpdate(
       { _id: userId },
 
